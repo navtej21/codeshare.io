@@ -2,9 +2,7 @@ package com.example.codeshare.SERVICE;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -16,6 +14,11 @@ public class RoomManager {
     private final ConcurrentHashMap<String, Set<WebSocketSession>> roomIds=new ConcurrentHashMap<>();
 
     private final ConcurrentHashMap<WebSocketSession,String> sessionToRoom=new ConcurrentHashMap<>();
+
+
+    // carry a set of testcases
+    private final ConcurrentHashMap<String, List<String>> roomTestCases=new ConcurrentHashMap<>();
+
 
 
     // create a join room Session Method
@@ -50,6 +53,18 @@ public class RoomManager {
                 roomIds.remove(roomId, sessions);
             }
         }
+    }
+
+
+    // set test cases for that particular roomId
+    public void setTestCases(String roomId,List<String> testCases){
+        roomTestCases.put(roomId,testCases);
+    }
+
+
+    // get the test cases for that particular roomId
+    public List<String> getTestCases(String roomId){
+        return roomTestCases.getOrDefault(roomId, Collections.emptyList());
     }
 
 }

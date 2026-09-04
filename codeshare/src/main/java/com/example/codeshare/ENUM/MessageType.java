@@ -9,4 +9,5 @@ public  class MessageType {
      public final static String JOIN_ROOM ="join_room";
      public final static  String EDIT="edit";
      public final static String RUN="run";
+     public final static String SET_TEST_CASES="set_test_cases";
 }

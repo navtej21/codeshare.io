@@ -47,6 +47,11 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
        else if(MessageType.RUN.equals(incoming.getType())){
           roomExecutionService.runAndBrodcast(incoming.getRoomId(),incoming.getLanguage(),incoming.getContent());
        }
+
+       else if(MessageType.SET_TEST_CASES.equals(incoming.getType())){
+           System.out.println("Type"+incoming.getType()+"testcases:"+incoming.getTestCase());
+           roomManager.setTestCases(incoming.getRoomId(),incoming.getTestCase());
+       }
     }
 
 
@@ -54,7 +59,7 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
 
         // retrieve all the websocketsessions
         Set<WebSocketSession> sessions=roomManager.getSessions(roomId);
-        RoomMessage outgoing=new RoomMessage(MessageType.EDIT,roomId,content,null);
+        RoomMessage outgoing=new RoomMessage(MessageType.EDIT,roomId,content,null,null);
 
         for(WebSocketSession session:sessions){
             if(!session.getId().equals(webSocketSession.getId()) && session.isOpen()){
