@@ -3,6 +3,7 @@ package com.example.codeshare.CONFIG;
 import com.example.codeshare.ENUM.MessageType;
 import com.example.codeshare.MODEL.RoomMessage;
 import com.example.codeshare.SERVICE.CodeExecutionerService;
+import com.example.codeshare.SERVICE.RoomExecutionService;
 import com.example.codeshare.SERVICE.RoomManager;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.message.Message;
@@ -25,7 +26,7 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
 
     private final RoomManager roomManager;
     private final ObjectMapper objectMapper;
-    private final CodeExecutionerService codeExecutionerService;
+    private final RoomExecutionService roomExecutionService;
 
 
 
@@ -44,7 +45,7 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
        }
 
        else if(MessageType.RUN.equals(incoming.getType())){
-
+          roomExecutionService.runAndBrodcast(incoming.getRoomId(),incoming.getLanguage(),incoming.getContent());
        }
     }
 
@@ -53,7 +54,7 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
 
         // retrieve all the websocketsessions
         Set<WebSocketSession> sessions=roomManager.getSessions(roomId);
-        RoomMessage outgoing=new RoomMessage(MessageType.EDIT,roomId,content);
+        RoomMessage outgoing=new RoomMessage(MessageType.EDIT,roomId,content,null);
 
         for(WebSocketSession session:sessions){
             if(!session.getId().equals(webSocketSession.getId()) && session.isOpen()){

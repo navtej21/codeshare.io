@@ -26,8 +26,11 @@ public class RoomExecutionService {
     public void runAndBrodcast(String roomId,String language,String code) throws IOException {
 
         try {
+
+            System.out.println("runAndBroadcast CALLED for room: " + roomId + ", language: " + language);
             // this will run in the another thread
             ExecuteResponse response = codeExecutionerService.execute(language, code);
+
 
 
             // get all the websocket session sfrom the room manager
@@ -43,11 +46,15 @@ public class RoomExecutionService {
 
             // brodcast to other websocket session except that to sender just like brodcast
 
-
             for (WebSocketSession session : sessions) {
                 if (session.isOpen()) {
                     session.sendMessage(new TextMessage(json));
+                    System.out.println("Sent to session: " + session.getId());
                 }
+                else{
+                    System.out.println("Session not open, skipping: " + session.getId());
+                }
+
             }
 
         }

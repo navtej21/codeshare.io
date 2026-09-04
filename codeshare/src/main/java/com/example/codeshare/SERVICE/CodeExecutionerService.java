@@ -61,6 +61,7 @@ public class CodeExecutionerService {
 
 
     private ExecuteResponse runPython(Path workDir, String code) throws IOException {
+        System.out.println("This is working");
         Path scriptFile = workDir.resolve("script.py");
         Files.writeString(scriptFile, code);
         String containerName="exec-"+UUID.randomUUID().toString().replace("-","");

@@ -15,4 +15,5 @@ public class RoomMessage {
     private String type;
     private String roomId;
     private String content;
+    private String language;
 }

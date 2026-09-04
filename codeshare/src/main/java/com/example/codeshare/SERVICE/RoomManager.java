@@ -20,9 +20,10 @@ public class RoomManager {
 
     // create a join room Session Method
     public void joinRoom(String roomId,WebSocketSession session){
-
         Set<WebSocketSession> sessions=roomIds.computeIfAbsent(roomId,key->ConcurrentHashMap.newKeySet());
         sessions.add(session);
+        System.out.println(roomIds);
+        System.out.println(sessionToRoom);
         sessionToRoom.put(session,roomId);
     }
 
