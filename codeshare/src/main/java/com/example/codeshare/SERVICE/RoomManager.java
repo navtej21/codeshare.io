@@ -37,6 +37,11 @@ public class RoomManager {
     }
 
 
+    public String getRoomIdFromSession(WebSocketSession session){
+        return sessionToRoom.get(session);
+    }
+
+
     // removing a room session Method
     public void removeSession(WebSocketSession session) {
         if (sessionToRoom.containsKey(session)) {

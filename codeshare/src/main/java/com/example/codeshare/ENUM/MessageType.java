@@ -10,4 +10,5 @@ public  class MessageType {
      public final static  String EDIT="edit";
      public final static String RUN="run";
      public final static String SET_TEST_CASES="set_test_cases";
+     public static final String PRESENCE_UPDATE = "presence_update";
 }

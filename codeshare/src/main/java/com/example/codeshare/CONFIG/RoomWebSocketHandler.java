@@ -1,6 +1,7 @@
 package com.example.codeshare.CONFIG;
 
 import com.example.codeshare.ENUM.MessageType;
+import com.example.codeshare.MODEL.PressenceMessage;
 import com.example.codeshare.MODEL.RoomMessage;
 import com.example.codeshare.SERVICE.CodeExecutionerService;
 import com.example.codeshare.SERVICE.RoomExecutionService;
@@ -39,6 +40,7 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
 
        if (MessageType.JOIN_ROOM.equals(incoming.getType())){
            roomManager.joinRoom(incoming.getRoomId(),session);
+           brodcastRoomPresence(incoming.getRoomId());
        }
        else if(MessageType.EDIT.equals(incoming.getType())){
            brodcastToRoomExceptSender(session,incoming.getRoomId(), incoming.getContent());
@@ -52,6 +54,8 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
            System.out.println("Type"+incoming.getType()+"testcases:"+incoming.getTestCase());
            roomManager.setTestCases(incoming.getRoomId(),incoming.getTestCase());
        }
+
+
     }
 
 
@@ -74,10 +78,35 @@ public class RoomWebSocketHandler extends TextWebSocketHandler {
 
 
 
+    private void brodcastRoomPresence(String roomId){
+        // retrieve all the sessionIds in that room
+        Set<WebSocketSession> sessions=roomManager.getSessions(roomId);
 
-    // specifically after closing the connection
+        PressenceMessage pressenceMessage=new PressenceMessage("presence_update",sessions.size());
+        System.out.println("Number of active users now"+sessions.size());
+        for(WebSocketSession session:sessions){
+            if(session.isOpen()){
+                try{
+                    session.sendMessage(new TextMessage(objectMapper.writeValueAsString(pressenceMessage)));
+                }
+                catch(Exception e){
+
+                }
+            }
+        }
+    }
+
+
+
+
+    // specifically after closing the connection we have to update the brodcastpresence everytime
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+
+        String roomId=roomManager.getRoomIdFromSession(session);
         roomManager.removeSession(session);
+       if(roomId!=null){
+           brodcastRoomPresence(roomId);
+       }
     }
 }
